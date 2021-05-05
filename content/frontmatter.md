@@ -1,0 +1,4 @@
+---
+  data: point
+---
+Hello, World!

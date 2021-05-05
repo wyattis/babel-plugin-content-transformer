@@ -1,0 +1,54 @@
+{
+  "name": "babel-content-loader",
+  "version": "0.1.0",
+  "description": "A babel plugin to load content from markdown, frontmatter, yaml, toml and csv",
+  "main": "dist/index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "@babel/parser": "^7.14.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.13.16",
+    "@babel/core": "^7.14.0",
+    "@babel/polyfill": "^7.12.1",
+    "@babel/preset-env": "^7.14.0",
+    "@babel/register": "^7.13.16",
+    "@babel/traverse": "^7.14.0",
+    "@babel/types": "^7.14.0",
+    "@types/babel__core": "^7.1.14",
+    "@types/babel__traverse": "^7.11.1",
+    "@types/chai": "^4.2.17",
+    "@types/mocha": "^8.2.2",
+    "@types/node": "^15.0.1",
+    "chai": "^4.3.4",
+    "mocha": "^8.3.2",
+    "nyc": "^15.1.0",
+    "toml": "^3.0.0",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.4",
+    "yaml": "^1.10.2"
+  },
+  "scripts": {
+    "build": "babel src -d lib",
+    "test": "nyc mocha test/**/*.spec.js -r @babel/register -r @babel/polyfill",
+    "test:watch": "mocha test/**/*.spec.js  -r @babel/register -r @babel/polyfill --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wyattis/babel-data-loader.git"
+  },
+  "keywords": [
+    "babel-plugin",
+    "markdown",
+    "content",
+    "remark"
+  ],
+  "author": "wyattis",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wyattis/babel-data-loader/issues"
+  },
+  "homepage": "https://github.com/wyattis/babel-data-loader#readme"
+}
