@@ -8,24 +8,35 @@ export function loadFile (t, p, state, opts) {
   const base = path.dirname(state.file.opts.filename)
   const full = path.join(base, loc)
   if (opts.file.test(loc)) {
-    const fileContents = fs.readFileSync(full, 'utf-8')
-    let transformedVal
-    switch (opts.format) {
-      case 'yaml':
-        const YAML = require('yaml')
-        transformedVal = t.valueToNode(YAML.parse(fileContents))
-        break;
-      case 'toml':
-        const toml = require('toml')
-        transformedVal = t.valueToNode(toml.parse(fileContents))
-        break;
-      case 'remark':
-        // TODO
-        break;
-      default:
-        // Replace with constant string
-        transformedVal = t.stringLiteral(fileContents)
+
+    // Function that transforms content into an AST node
+    let transformer = contents => t.valueToNode(contents)
+
+    if (opts.transform) {
+      transformer = contents => {
+        return t.valueToNode(opts.transform(contents))
+      }
+    } else {
+      switch (opts.format) {
+        case 'yaml':
+          const YAML = require('yaml')
+          transformer = contents => t.valueToNode(YAML.parse(contents))
+          break;
+        case 'toml':
+          const toml = require('toml')
+          transformer = contents => t.valueToNode(toml.parse(contents))
+          break;
+        case 'remark':
+          // TODO
+          break;
+        default:
+          transformer = contents => t.stringLiteral(contents)
+      }
     }
+
+    const fileContents = fs.readFileSync(full, 'utf-8')
+    const transformedVal = transformer(fileContents)
+    
     p.replaceWith({
       type: 'VariableDeclaration',
       kind: 'const',

@@ -3,17 +3,18 @@ import * as babel from '@babel/core'
 import fs from 'fs'
 import path from 'path'
 import { expect } from 'chai'
+import { evalTransformed } from './evalTransformed'
 
-function evalTransformed (transformed) {
-  return eval(`
-    (function () {
-      ${transformed.code};
-      return exports.default;
-    })()
-  `)
-}
-
-describe('loading', () => {
+describe('Transformers', () => {
+  
+  it('should have the correct config', () => {
+    const t = babel.transform('', {
+      plugins: [
+        [Plugin, {}]
+      ]
+    })
+    
+  })
 
   it('loads markdown as a string', () => {
     const t = babel.transform(
@@ -51,8 +52,8 @@ describe('loading', () => {
     expect(evalTransformed(t)).to.deep.equal({ hello: 'world' })
   })
 
-  it('loads toml as an object', () => {
-    const t = babel.transform(
+  it('loads toml as an object', async () => {
+    const t = await babel.transformAsync(
       `import config from '../content/toml.toml';
       export default config`,
       {
@@ -69,20 +70,29 @@ describe('loading', () => {
     expect(evalTransformed(t)).to.deep.equal({ hello: 'world' })
   })
 
-  it('loads a directory as an array', () => {
+  it('loads custom transformer', () => {
     const t = babel.transform(
-      `import vals from '../content/posts'`,
+      `import post from '../content/frontmatter.md'
+      export default post`,
       {
         filename: __filename,
-        plugins: [
-          [Plugin, {
-            dir: /posts$/,
-            filter: /\.js$/
-          }]
-        ]
+        plugins: [[
+          Plugin,
+          {
+            file: /\.md/,
+            transform (contents) {
+              return {
+                contents
+              }
+            }
+          }
+        ]]
       }
     )
 
-    expect(evalTransformed(t)).to.deep.equal([{ default: 1 }, { default: 2 }])
+    expect(evalTransformed(t)).to.deep.equal({
+      contents: fs.readFileSync(path.join(__dirname, '../content/frontmatter.md'), 'utf-8')
+    })
   })
+
 })

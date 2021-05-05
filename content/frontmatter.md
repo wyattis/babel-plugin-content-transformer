@@ -1,4 +1,4 @@
 ---
-  data: point
+  hello: world
 ---
 Hello, World!
