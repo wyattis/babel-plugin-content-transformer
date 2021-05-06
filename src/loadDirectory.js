@@ -1,5 +1,6 @@
 import * as fs from 'fs'
 import * as path from 'path'
+import { escapeVarName } from './escapeVarName'
 
 export function loadDirectory (t, p, state, opts) {
   if (p.node.source && p.node.source.value && opts.dir.test(p.node.source.value)) {
@@ -18,7 +19,7 @@ export function loadDirectory (t, p, state, opts) {
     
     const nodes = files.filter(f => !opts.filter || opts.filter.test(f)).map(f => {
       const key = path.basename(f).replace(path.extname(f), '')
-      const identifier = t.identifier(key)
+      const identifier = t.identifier(escapeVarName(key))
       keys.push(identifier)
       let importPath = path.join(path.relative(base, fullPath), f)
       if (!importPath.startsWith('.')) {

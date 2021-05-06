@@ -7,6 +7,7 @@ export function evalTransformed (transformed) {
       })()
     `)
   } catch (err) {
+    console.error('failed to eval')
     console.log(transformed.code)
   }
 }

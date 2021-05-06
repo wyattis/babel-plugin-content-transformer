@@ -25,7 +25,7 @@ describe('Directory', () => {
     )
 
     expect(evalTransformed(t)).to.deep.equal([{ default: 1 }, { default: 2 }])
-  })
+  }).timeout(5000)
 
   it('loads directory and transforms files', () => {
     const t = babel.transform(
@@ -48,10 +48,11 @@ describe('Directory', () => {
       }
     )
 
-    expect(evalTransformed(t)).to.deep.equal([
-      fs.readFileSync(path.join(__dirname, './content/posts/one.md'), 'utf-8'),
-      fs.readFileSync(path.join(__dirname, './content/posts/two.md'), 'utf-8')
-    ])
-  })
+  
+    const res = evalTransformed(t)
+    expect(res).to.deep.include(fs.readFileSync(path.join(__dirname, './content/posts/one.md'), 'utf-8'))
+    expect(res).to.deep.include(fs.readFileSync(path.join(__dirname, './content/posts/two.md'), 'utf-8'))
+    expect(res).to.deep.include(fs.readFileSync(path.join(__dirname, './content/posts/three-test.md'), 'utf-8'))
 
+  }).timeout(5000)
 })
