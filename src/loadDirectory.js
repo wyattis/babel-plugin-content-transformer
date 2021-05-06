@@ -4,6 +4,11 @@ import * as path from 'path'
 export function loadDirectory (t, p, state, opts) {
   const loc = p.node.source.value
   if (opts.dir.test(loc)) {
+    
+    if (p.node.specifiers.length > 1) {
+      throw new Error(`Only default imports are supported. Check the import statement for '${loc}' in ${state.file.opts.filename}`);
+    }
+    
     const base = path.dirname(state.file.opts.filename)
     const fullPath = path.join(base, loc)
     const files = fs.readdirSync(fullPath)

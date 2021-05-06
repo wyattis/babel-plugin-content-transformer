@@ -19,6 +19,10 @@ function loadDirectory(t, p, state, opts) {
   var loc = p.node.source.value;
 
   if (opts.dir.test(loc)) {
+    if (p.node.specifiers.length > 1) {
+      throw new Error("Only default imports are supported. Check the import statement for '".concat(loc, "' in ").concat(state.file.opts.filename));
+    }
+
     var base = path.dirname(state.file.opts.filename);
     var fullPath = path.join(base, loc);
     var files = fs.readdirSync(fullPath);

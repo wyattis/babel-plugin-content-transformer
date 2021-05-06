@@ -2,12 +2,18 @@ import * as path from 'path'
 import * as fs from 'fs'
 
 export function loadFile (t, p, state, opts) {
-  const specifier = p.node.specifiers[0]
-  const id = specifier.local.name
   const loc = p.node.source.value
-  const base = path.dirname(state.file.opts.filename)
-  const full = path.join(base, loc)
+
   if (opts.file.test(loc)) {
+
+    if (p.node.specifiers.length > 1) {
+      throw new Error(`Only default imports are supported. Check the import statement for '${loc}' in ${state.file.opts.filename}`);
+    }
+
+    const specifier = p.node.specifiers[0]
+    const id = specifier.local.name
+    const base = path.dirname(state.file.opts.filename)
+    const full = path.join(base, loc)
 
     // Function that transforms content into an AST node
     let transformer = contents => t.valueToNode(contents)
