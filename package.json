@@ -1,8 +1,8 @@
 {
-  "name": "babel-content-loader",
+  "name": "babel-plugin-content-loader",
   "version": "0.1.0",
-  "description": "A babel plugin to load content from markdown, frontmatter, yaml, toml and csv",
-  "main": "dist/index.js",
+  "description": "A babel plugin to load content from markdown, frontmatter, yaml and toml",
+  "main": "src/index.js",
   "directories": {
     "test": "test"
   },
@@ -27,6 +27,10 @@
     "ts-node": "^9.1.1",
     "typescript": "^4.2.4",
     "yaml": "^1.10.2"
+  },
+  "peerDependencies": {
+    "yaml": "*",
+    "toml": "*"
   },
   "scripts": {
     "build": "babel src -d lib",
