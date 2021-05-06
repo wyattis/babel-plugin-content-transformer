@@ -1,8 +1,8 @@
 {
   "name": "babel-plugin-content-loader",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "A babel plugin to load content from markdown, frontmatter, yaml and toml",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "directories": {
     "test": "test"
   },
@@ -33,7 +33,7 @@
     "toml": "*"
   },
   "scripts": {
-    "build": "babel src -d lib",
+    "build": "babel src -d dist",
     "test": "nyc mocha test/**/*.spec.js -r @babel/register -r @babel/polyfill",
     "test:watch": "mocha test/**/*.spec.js  -r @babel/register -r @babel/polyfill --watch"
   },
