@@ -1,5 +1,6 @@
 # babel-plugin-content-transformer
-Easily transform YAML, TOML, and Markdown as normal JavaScript objects at build time. Also transform directories of content into simple arrays for consumption.
+Easily transform YAML, TOML, and Markdown into normal JavaScript objects and
+convert directories of content into arrays at build time.
 
 ## Install
 `npm i -D babel-plugin-content-transformer`
@@ -52,32 +53,58 @@ This custom transformer will extract [frontmatter] from Markdown files and
 transform it into an object adding a "body" property for the Markdown content.
 
 ```javascript
+// babel.config.js
 const parse = require('remark-parse')
 const stringify = require('remark-stringify')
 const frontmatter = require('remark-frontmatter')
 const extract = require('remark-extract-frontmatter')
 const yaml = require('yaml')
 
-// In plugins sections of babel.config.js
-['content-transformer', {
-  transformers: [{
-    file: /\.md$/,
-    transform (contents) {
-      const file = unified()
-        .use(parse)
-        .use(stringify)
-        .use(frontmatter)
-        .use(extract, { yaml: yaml.parse })
-        .processSync(contents)
-      const data = { ...file.data }
-      if (file.toString()) {
-        data.body = file.toString()
-      }
-      return data
-    }
-  }]
-}]
+module.exports = {
+  plugins: [
+    ['content-transformer', {
+      transformers: [{
+        file: /\.md$/,
+        transform (contents, filename) {
+          const file = unified()
+            .use(parse)
+            .use(stringify)
+            .use(frontmatter)
+            .use(extract, { yaml: yaml.parse })
+            .processSync(contents)
+          const data = { ...file.data }
+          if (file.toString()) {
+            data.body = file.toString()
+          }
+          return data
+        }
+      }]
+    }]
+  ]
+}
 ```
+
+## Configuration
+
+### Transformers
+All transformers need to have at minimum a "file" definition. This indicates which files should be transformed. Either a "transform" or "format" block can be provided, but not both. If both are omitted, the file is loaded as a string.
+
+| Name        | Type | Description | Required | Default |
+| ----------- | ---- | ----------- | -------- | ------- |
+| file        | RegExp | Which files to transform. An object with a "test" method like a RegExp. | true | |
+| transform   | `(contents: string, filename: string) => any` | A custom transformation function. | false    | |
+| format      | string | One of 'yaml', 'toml', 'string' | false | `'string'` |
+
+
+### Content
+Content blocks transform directories into arrays for easy consumption. Can be used together with transformers for easy content loading.
+
+| Name        | Type | Description               | Required | Default |
+| ----------- | ---- | -----------               | -------- | ------- |
+| dir | RegExp | Indicates which import statements should be treated as content directories. | true | |
+| filter | RegExp | Filters out files within matching directories | false | null
+
+
 
 [yaml]: https://www.npmjs.com/package/yaml
 [toml]: https://www.npmjs.com/package/toml

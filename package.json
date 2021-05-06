@@ -1,7 +1,7 @@
 {
   "name": "babel-plugin-content-transformer",
-  "version": "0.1.5",
-  "description": "A customizable babel plugin for loading all types of content including markdown, frontmatter, yaml and toml",
+  "version": "0.1.0",
+  "description": "A customizable babel plugin for loading all types of content files including markdown, frontmatter, yaml and toml",
   "main": "dist/index.js",
   "directories": {
     "test": "test"
@@ -34,12 +34,13 @@
   },
   "scripts": {
     "build": "babel src -d dist",
+    "prepublish": "npm run build",
     "test": "nyc mocha test/**/*.spec.js -r @babel/register -r @babel/polyfill",
     "test:watch": "mocha test/**/*.spec.js  -r @babel/register -r @babel/polyfill --watch"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wyattis/babel-data-loader.git"
+    "url": "git+https://github.com/wyattis/babel-plugin-content-transformer.git"
   },
   "keywords": [
     "babel-plugin",
@@ -50,7 +51,7 @@
   "author": "wyattis",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/wyattis/babel-data-loader/issues"
+    "url": "https://github.com/wyattis/babel-plugin-content-transformer/issues"
   },
-  "homepage": "https://github.com/wyattis/babel-data-loader#readme"
+  "homepage": "https://github.com/wyattis/babel-plugin-content-transformer#readme"
 }
