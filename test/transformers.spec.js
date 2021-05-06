@@ -18,7 +18,7 @@ describe('Transformers', () => {
 
   it('loads markdown as a string', () => {
     const t = babel.transform(
-      `import content from '../content/markdown.md'
+      `import content from './content/markdown.md'
         export default content`,
       {
         filename: __filename,
@@ -31,12 +31,12 @@ describe('Transformers', () => {
       }
     )
     
-    expect(evalTransformed(t)).to.equal(fs.readFileSync(path.join(__dirname, '../content/markdown.md'), 'utf-8'))
+    expect(evalTransformed(t)).to.equal(fs.readFileSync(path.join(__dirname, './content/markdown.md'), 'utf-8'))
   })
 
   it('loads yaml as an object', () => {
     const t = babel.transform(
-      `import config from '../content/yaml.yaml';
+      `import config from './content/yaml.yaml';
       export default config`,
       {
         filename: __filename,
@@ -54,7 +54,7 @@ describe('Transformers', () => {
 
   it('loads toml as an object', async () => {
     const t = await babel.transformAsync(
-      `import config from '../content/toml.toml';
+      `import config from './content/toml.toml';
       export default config`,
       {
         filename: __filename,
@@ -72,7 +72,7 @@ describe('Transformers', () => {
 
   it('loads custom transformer', () => {
     const t = babel.transform(
-      `import post from '../content/frontmatter.md'
+      `import post from './content/frontmatter.md'
       export default post`,
       {
         filename: __filename,
@@ -91,7 +91,7 @@ describe('Transformers', () => {
     )
 
     expect(evalTransformed(t)).to.deep.equal({
-      contents: fs.readFileSync(path.join(__dirname, '../content/frontmatter.md'), 'utf-8')
+      contents: fs.readFileSync(path.join(__dirname, './content/frontmatter.md'), 'utf-8')
     })
   })
 

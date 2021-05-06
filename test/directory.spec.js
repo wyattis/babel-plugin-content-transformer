@@ -7,7 +7,7 @@ import { evalTransformed } from './evalTransformed'
 describe('Directory', () => {
   it('loads a directory as an array', () => {
     const t = babel.transform(
-      `import vals from '../content/posts'`,
+      `import vals from './content/posts'`,
       {
         filename: __filename,
         plugins: [

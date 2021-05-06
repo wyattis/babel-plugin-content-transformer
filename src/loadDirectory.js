@@ -8,17 +8,20 @@ export function loadDirectory (t, p, state, opts) {
     const fullPath = path.join(base, loc)
     const files = fs.readdirSync(fullPath)
     const keys = []
+    
     const nodes = files.filter(f => !opts.filter || opts.filter.test(f)).map(f => {
       const key = path.basename(f).replace(path.extname(f), '')
       const identifier = t.identifier(key)
       keys.push(identifier)
-      
-      // TODO: This could be changed to a named import or default import
+      let importPath = path.join(path.relative(base, fullPath), f)
+      if (!importPath.startsWith('.')) {
+        importPath = './' + importPath
+      }
       return t.importDeclaration(
         [
           t.importNamespaceSpecifier(identifier)
         ],
-        t.stringLiteral(path.join(loc, f))
+        t.stringLiteral(importPath)
       )
     })
 
