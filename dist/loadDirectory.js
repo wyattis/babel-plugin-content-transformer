@@ -28,9 +28,14 @@ function loadDirectory(t, p, state, opts) {
     }).map(function (f) {
       var key = path.basename(f).replace(path.extname(f), '');
       var identifier = t.identifier(key);
-      keys.push(identifier); // TODO: This could be changed to a named import or default import
+      keys.push(identifier);
+      var importPath = path.join(path.relative(base, fullPath), f);
 
-      return t.importDeclaration([t.importNamespaceSpecifier(identifier)], t.stringLiteral(path.join(loc, f)));
+      if (!importPath.startsWith('.')) {
+        importPath = './' + importPath;
+      }
+
+      return t.importDeclaration([t.importNamespaceSpecifier(identifier)], t.stringLiteral(importPath));
     });
     var arrId = t.identifier('files');
     var arrDeclaration = t.variableDeclaration('const', [t.variableDeclarator(arrId, t.arrayExpression(keys))]);
