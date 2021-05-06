@@ -32,10 +32,13 @@ function ContentPlugin(_ref) {
             for (_iterator.s(); !(_step = _iterator.n()).done;) {
               var t = _step.value;
 
-              if (t.file) {
-                (0, _loadFile.loadFile)(types, p, state, t);
-              } else {
+              if (!t.file) {
                 throw UnsupportedError;
+              }
+
+              if (p.node && p.node.source && t.file.test(p.node.source.value)) {
+                (0, _loadFile.loadFile)(types, p, state, t);
+                break;
               }
             }
           } catch (err) {
@@ -53,10 +56,13 @@ function ContentPlugin(_ref) {
             for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
               var c = _step2.value;
 
-              if (c.dir) {
-                (0, _loadDirectory.loadDirectory)(types, p, state, c);
-              } else {
+              if (!c.dir) {
                 throw UnsupportedError;
+              }
+
+              if (p.node && p.node.source && c.dir.test(p.node.source.value)) {
+                (0, _loadDirectory.loadDirectory)(types, p, state, c);
+                break;
               }
             }
           } catch (err) {

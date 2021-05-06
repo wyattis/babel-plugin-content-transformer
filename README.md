@@ -49,10 +49,16 @@ Requires [toml] to be installed.
 
 ### Custom transformation
 This custom transformer will extract [frontmatter] from Markdown files and
-transform it into an object defined by the frontmatter, with a "body" tag for
-the Markdown content.
+transform it into an object adding a "body" property for the Markdown content.
 
 ```javascript
+const parse = require('remark-parse')
+const stringify = require('remark-stringify')
+const frontmatter = require('remark-frontmatter')
+const extract = require('remark-extract-frontmatter')
+const yaml = require('yaml')
+
+// In plugins sections of babel.config.js
 ['content-transformer', {
   transformers: [{
     file: /\.md$/,

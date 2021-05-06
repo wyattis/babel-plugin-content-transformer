@@ -10,19 +10,23 @@ export default function ContentPlugin ({ types }) {
         const opts = state.opts
         if (opts.transformers) {
           for (const t of opts.transformers) {
-            if (t.file) {
-              loadFile(types, p, state, t)
-            } else {
+            if (!t.file) {
               throw UnsupportedError
+            }
+            if (p.node && p.node.source && t.file.test(p.node.source.value)) {
+              loadFile(types, p, state, t)
+              break
             }
           }
         } 
         if (opts.content) {
           for (const c of opts.content) {
-            if (c.dir) {
-              loadDirectory(types, p, state, c)
-            } else {
+            if (!c.dir) {
               throw UnsupportedError
+            }
+            if (p.node && p.node.source && c.dir.test(p.node.source.value)) {
+              loadDirectory(types, p, state, c)
+              break
             }
           }
         } 
