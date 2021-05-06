@@ -16,13 +16,14 @@ function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "functio
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function loadDirectory(t, p, state, opts) {
-  var loc = p.node.source.value;
-
-  if (opts.dir.test(loc)) {
+  if (p.node.source && p.node.source.value && opts.dir.test(p.node.source.value)) {
     if (p.node.specifiers.length > 1) {
       throw new Error("Only default imports are supported. Check the import statement for '".concat(loc, "' in ").concat(state.file.opts.filename));
     }
 
+    var loc = p.node.source.value;
+    var specifier = p.node.specifiers[0];
+    var id = specifier.local.name;
     var base = path.dirname(state.file.opts.filename);
     var fullPath = path.join(base, loc);
     var files = fs.readdirSync(fullPath);
@@ -41,10 +42,9 @@ function loadDirectory(t, p, state, opts) {
 
       return t.importDeclaration([t.importNamespaceSpecifier(identifier)], t.stringLiteral(importPath));
     });
-    var arrId = t.identifier('files');
+    var arrId = t.identifier(id);
     var arrDeclaration = t.variableDeclaration('const', [t.variableDeclarator(arrId, t.arrayExpression(keys))]);
-    var exportDeclaration = t.exportDefaultDeclaration(arrId);
-    nodes.push(arrDeclaration, exportDeclaration);
+    nodes.push(arrDeclaration);
     p.replaceWithMultiple(nodes);
   }
 }

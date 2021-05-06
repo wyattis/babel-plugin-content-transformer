@@ -43,7 +43,9 @@ function ContentPlugin(_ref) {
           } finally {
             _iterator.f();
           }
-        } else if (opts.content) {
+        }
+
+        if (opts.content) {
           var _iterator2 = _createForOfIteratorHelper(opts.content),
               _step2;
 
@@ -62,7 +64,9 @@ function ContentPlugin(_ref) {
           } finally {
             _iterator2.f();
           }
-        } else {
+        }
+
+        if (!(opts.transformers || opts.content)) {
           throw UnsupportedError;
         }
       }

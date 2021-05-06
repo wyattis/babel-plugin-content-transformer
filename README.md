@@ -1,5 +1,5 @@
 # babel-plugin-content-transformer
-Easily transform YAML, TOML, and Markdown as normal JavaScript objects at build time. Transform directories of content into simple arrays.
+Easily transform YAML, TOML, and Markdown as normal JavaScript objects at build time. Also transform directories of content into simple arrays for consumption.
 
 ## Install
 `npm i -D babel-plugin-content-transformer`
@@ -48,13 +48,26 @@ Requires [toml] to be installed.
 ```
 
 ### Custom transformation
+This custom transformer will extract [frontmatter] from Markdown files and
+transform it into an object defined by the frontmatter, with a "body" tag for
+the Markdown content.
+
 ```javascript
 ['content-transformer', {
   transformers: [{
-    file: /\.md/
+    file: /\.md$/,
     transform (contents) {
-      // Transform using remark + unifiedjs
-      return eval(contents)
+      const file = unified()
+        .use(parse)
+        .use(stringify)
+        .use(frontmatter)
+        .use(extract, { yaml: yaml.parse })
+        .processSync(contents)
+      const data = { ...file.data }
+      if (file.toString()) {
+        data.body = file.toString()
+      }
+      return data
     }
   }]
 }]
@@ -62,3 +75,4 @@ Requires [toml] to be installed.
 
 [yaml]: https://www.npmjs.com/package/yaml
 [toml]: https://www.npmjs.com/package/toml
+[frontmatter]: https://github.com/remarkjs/remark-frontmatter

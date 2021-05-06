@@ -2,13 +2,15 @@ import * as fs from 'fs'
 import * as path from 'path'
 
 export function loadDirectory (t, p, state, opts) {
-  const loc = p.node.source.value
-  if (opts.dir.test(loc)) {
+  if (p.node.source && p.node.source.value && opts.dir.test(p.node.source.value)) {
     
     if (p.node.specifiers.length > 1) {
       throw new Error(`Only default imports are supported. Check the import statement for '${loc}' in ${state.file.opts.filename}`);
     }
-    
+
+    const loc = p.node.source.value
+    const specifier = p.node.specifiers[0]
+    const id = specifier.local.name
     const base = path.dirname(state.file.opts.filename)
     const fullPath = path.join(base, loc)
     const files = fs.readdirSync(fullPath)
@@ -30,7 +32,7 @@ export function loadDirectory (t, p, state, opts) {
       )
     })
 
-    const arrId = t.identifier('files')
+    const arrId = t.identifier(id)
     const arrDeclaration = t.variableDeclaration(
       'const',
       [
@@ -41,9 +43,7 @@ export function loadDirectory (t, p, state, opts) {
       ]
     )
 
-    const exportDeclaration = t.exportDefaultDeclaration(arrId)
-    
-    nodes.push(arrDeclaration, exportDeclaration)
+    nodes.push(arrDeclaration)
     p.replaceWithMultiple(nodes)
   }
 }

@@ -16,7 +16,8 @@ export default function ContentPlugin ({ types }) {
               throw UnsupportedError
             }
           }
-        } else if (opts.content) {
+        } 
+        if (opts.content) {
           for (const c of opts.content) {
             if (c.dir) {
               loadDirectory(types, p, state, c)
@@ -24,7 +25,8 @@ export default function ContentPlugin ({ types }) {
               throw UnsupportedError
             }
           }
-        } else {
+        } 
+        if (!(opts.transformers || opts.content)){
           throw UnsupportedError
         }
       }

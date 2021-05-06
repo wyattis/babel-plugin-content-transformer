@@ -1,8 +1,12 @@
 export function evalTransformed (transformed) {
-  return eval(`
-    (function () {
-      ${transformed.code};
-      return exports.default;
-    })()
-  `)
+  try {
+    return eval(`
+      (function () {
+        ${transformed.code};
+        return exports.default;
+      })()
+    `)
+  } catch (err) {
+    console.log(transformed.code)
+  }
 }
