@@ -1,17 +1,31 @@
 import { loadFile } from './loadFile'
 import { loadDirectory } from './loadDirectory'
 
-export default function ContentPlugin ({ types: t }) {
+const UnsupportedError = new Error('Unsupported configuration for babel-plugin-content-transformer')
+
+export default function ContentPlugin ({ types }) {
   return {
     visitor: {
       ImportDeclaration (p, state) {
         const opts = state.opts
-        if (opts.file) {
-          loadFile(t, p, state, opts)
-        } else if (opts.dir) {
-          loadDirectory(t, p, state, opts)
+        if (opts.transformers) {
+          for (const t of opts.transformers) {
+            if (t.file) {
+              loadFile(types, p, state, t)
+            } else {
+              throw UnsupportedError
+            }
+          }
+        } else if (opts.content) {
+          for (const c of opts.content) {
+            if (c.dir) {
+              loadDirectory(types, p, state, c)
+            } else {
+              throw UnsupportedError
+            }
+          }
         } else {
-          throw new Error('Unsupported configuration for babel-content-plugin')
+          throw UnsupportedError
         }
       }
     }

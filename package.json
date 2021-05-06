@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-content-loader",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "A customizable babel plugin for loading all types of content including markdown, frontmatter, yaml and toml",
   "main": "dist/index.js",
   "directories": {

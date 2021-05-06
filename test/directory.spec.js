@@ -12,8 +12,10 @@ describe('Directory', () => {
         filename: __filename,
         plugins: [
           [Plugin, {
-            dir: /posts$/,
-            filter: /\.js$/
+            content: [{
+              dir: /posts$/,
+              filter: /\.js$/
+            }]
           }]
         ]
       }

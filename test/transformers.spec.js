@@ -24,8 +24,10 @@ describe('Transformers', () => {
         filename: __filename,
         plugins: [
           [Plugin, {
-            file: /\.md$/,
-            format: 'string'
+            transformers: [{
+              file: /\.md$/,
+              format: 'string'
+            }]
           }]
         ]
       }
@@ -42,8 +44,10 @@ describe('Transformers', () => {
         filename: __filename,
         plugins: [
           [Plugin, {
-            file: /\.ya?ml$/,
-            format: 'yaml'
+            transformers: [{
+              file: /\.ya?ml$/,
+              format: 'yaml'
+            }]
           }]
         ]
       }
@@ -60,8 +64,10 @@ describe('Transformers', () => {
         filename: __filename,
         plugins: [
           [Plugin, {
-            file: /\.to?ml$/,
-            format: 'toml'
+            transformers: [{
+              file: /\.to?ml$/,
+              format: 'toml'
+            }]
           }]
         ]
       }
@@ -79,12 +85,14 @@ describe('Transformers', () => {
         plugins: [[
           Plugin,
           {
-            file: /\.md/,
-            transform (contents) {
-              return {
-                contents
+            transformers: [{
+              file: /\.md/,
+              transform (contents) {
+                return {
+                  contents
+                }
               }
-            }
+            }]
           }
         ]]
       }
@@ -94,5 +102,4 @@ describe('Transformers', () => {
       contents: fs.readFileSync(path.join(__dirname, './content/frontmatter.md'), 'utf-8')
     })
   })
-
 })
