@@ -50,7 +50,7 @@ Requires [toml] to be installed.
 
 ### Custom transformation
 This custom transformer will extract [frontmatter] from Markdown files and
-transform it into an object adding a "body" property for the Markdown content.
+transform it into an object with the Markdown content in a "body" property.
 
 ```javascript
 // babel.config.js

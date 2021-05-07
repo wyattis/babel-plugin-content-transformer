@@ -3,10 +3,12 @@
   "version": "0.1.0",
   "description": "A customizable babel plugin for loading all types of content files including markdown, frontmatter, yaml and toml",
   "main": "dist/index.js",
+  "files": [
+    "dist/**/*"
+  ],
   "directories": {
     "test": "test"
   },
-  "dependencies": {},
   "devDependencies": {
     "@babel/cli": "^7.13.16",
     "@babel/core": "^7.14.0",
@@ -15,11 +17,6 @@
     "@babel/register": "^7.13.16",
     "@babel/traverse": "^7.14.0",
     "@babel/types": "^7.14.1",
-    "@types/babel__core": "^7.1.14",
-    "@types/babel__traverse": "^7.11.1",
-    "@types/chai": "^4.2.17",
-    "@types/mocha": "^8.2.2",
-    "@types/node": "^15.0.1",
     "chai": "^4.3.4",
     "mocha": "^8.3.2",
     "nyc": "^15.1.0",
