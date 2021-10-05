@@ -1,5 +1,5 @@
-import * as path from 'path'
 import * as fs from 'fs'
+import { resolvePath } from './utils'
 
 export function loadFile (t, p, state, opts) {
 
@@ -9,12 +9,9 @@ export function loadFile (t, p, state, opts) {
 
   const specifier = p.node.specifiers[0]
   const id = specifier.local.name
-  const base = path.dirname(state.file.opts.filename)
-  const fullPath = path.join(base, p.node.source.value)
 
   // Function that transforms content into an AST node
   let transformer = contents => t.valueToNode(contents)
-
   if (opts.transform) {
     transformer = contents => {
       return t.valueToNode(opts.transform(contents))
@@ -34,6 +31,7 @@ export function loadFile (t, p, state, opts) {
     }
   }
 
+  const fullPath = resolvePath(p.node.source.value, state.file.opts.filename)
   const fileContents = fs.readFileSync(fullPath, 'utf-8')
   const transformedVal = transformer(fileContents, fullPath)
   

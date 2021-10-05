@@ -18,6 +18,7 @@
     "@babel/traverse": "^7.14.0",
     "@babel/types": "^7.14.1",
     "chai": "^4.3.4",
+    "import-test-files": "^1.2.0",
     "mocha": "^8.3.2",
     "nyc": "^15.1.0",
     "toml": "^3.0.0",
@@ -26,8 +27,8 @@
     "yaml": "^1.10.2"
   },
   "peerDependencies": {
-    "yaml": "*",
-    "toml": "*"
+    "toml": "*",
+    "yaml": "*"
   },
   "scripts": {
     "build": "babel src -d dist",
