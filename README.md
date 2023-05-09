@@ -7,7 +7,7 @@ convert directories of content into arrays at build time.
 ## Usage
 ### Transform a directory of Markdown files into an array of strings
 ```javascript
-['content-transformer', {
+['content-transformer', 
   transformers: [
     // Convert import statements ending with ".md" into strings
     {
@@ -17,7 +17,7 @@ convert directories of content into arrays at build time.
   ],
   content: [
     // Import statements ending with "content" are converted into
-    // an array of imports. The array will ony include ".md" files
+    // an array of imports. The array will only include ".md" files
     {
       dir: /content$/,
       filter: /\.md$/

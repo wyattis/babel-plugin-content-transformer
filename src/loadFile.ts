@@ -1,18 +1,26 @@
+import type * as BabelCoreNamespace from '@babel/core'
 import * as fs from 'fs'
+import path from 'path'
 import { resolvePath } from './utils'
+import type { Options } from './plugin'
+import { Expression } from '@babel/types'
 
-export function loadFile (t, p, state, opts) {
+type API = typeof BabelCoreNamespace
+
+export function loadFile (t: typeof BabelCoreNamespace.types, p: BabelCoreNamespace.NodePath<BabelCoreNamespace.types.ImportDeclaration>, state: BabelCoreNamespace.PluginPass, opts: Options) {
 
   if (p.node.specifiers.length > 1) {
-    throw new Error(`Only default imports are supported. Check the import statement for '${loc}' in ${state.file.opts.filename}`);
+    throw new Error(`Only default imports are supported. Check the import statement in ${state.file.opts.filename}`);
+  } else if (!state.file.opts.filename) {
+    throw new Error(`Could not determine filename for ${p.node.source.value}`)
   }
 
   const specifier = p.node.specifiers[0]
   const id = specifier.local.name
 
   // Function that transforms content into an AST node
-  let transformer = contents => t.valueToNode(contents)
-  if (opts.transform) {
+  let transformer: (v: string) => Expression = (contents: string) => t.valueToNode(contents)
+  if ("transform" in opts) {
     transformer = contents => {
       return t.valueToNode(opts.transform(contents))
     }
@@ -31,9 +39,10 @@ export function loadFile (t, p, state, opts) {
     }
   }
 
-  const fullPath = resolvePath(p.node.source.value, state.file.opts.filename)
+  const fileDir = path.dirname(state.file.opts.filename)
+  const fullPath = resolvePath(p.node.source.value, fileDir)
   const fileContents = fs.readFileSync(fullPath, 'utf-8')
-  const transformedVal = transformer(fileContents, fullPath)
+  const transformedVal = transformer(fileContents)
   
   p.replaceWith({
     type: 'VariableDeclaration',

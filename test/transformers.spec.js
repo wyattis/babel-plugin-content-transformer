@@ -7,15 +7,6 @@ import { evalTransformed } from './evalTransformed'
 
 describe('Transformers', () => {
   
-  it('should have the correct config', () => {
-    const t = babel.transform('', {
-      plugins: [
-        [Plugin, {}]
-      ]
-    })
-    // TODO: How to check this?
-  })
-
   it('loads markdown as a string', () => {
     const t = babel.transform(
       `import content from './content/markdown.md'
@@ -24,10 +15,8 @@ describe('Transformers', () => {
         filename: __filename,
         plugins: [
           [Plugin, {
-            transformers: [{
-              file: /\.md$/,
-              format: 'string'
-            }]
+            source: './test/content/markdown.md',
+            format: 'string',
           }]
         ]
       }
@@ -44,10 +33,8 @@ describe('Transformers', () => {
         filename: __filename,
         plugins: [
           [Plugin, {
-            transformers: [{
-              file: /\.ya?ml$/,
-              format: 'yaml'
-            }]
+            source: './test/content/yaml.yaml',
+            format: 'yaml',
           }]
         ]
       }
@@ -64,10 +51,8 @@ describe('Transformers', () => {
         filename: __filename,
         plugins: [
           [Plugin, {
-            transformers: [{
-              file: /\.to?ml$/,
-              format: 'toml'
-            }]
+            source: './test/content/toml.toml',
+            format: 'toml',
           }]
         ]
       }
@@ -85,14 +70,13 @@ describe('Transformers', () => {
         plugins: [[
           Plugin,
           {
-            transformers: [{
-              file: /\.md/,
-              transform (contents) {
-                return {
-                  contents
-                }
+            source: './test/content/frontmatter.md',
+            file: /\.md/,
+            transform (contents) {
+              return {
+                contents
               }
-            }]
+            }
           }
         ]]
       }
@@ -102,4 +86,5 @@ describe('Transformers', () => {
       contents: fs.readFileSync(path.join(__dirname, './content/frontmatter.md'), 'utf-8')
     })
   })
+  
 })

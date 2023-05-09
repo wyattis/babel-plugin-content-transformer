@@ -1,4 +1,4 @@
-export function replaceAll(val, pattern, replacement) {
+export function replaceAll(val: string, pattern: RegExp, replacement: string) {
   let newVal = val
   do {
     val = newVal
@@ -7,6 +7,6 @@ export function replaceAll(val, pattern, replacement) {
   return newVal
 }
 
-export function escapeVarName (name) {
+export function escapeVarName (name: string) {
   return replaceAll(name, /[-'"\(\)\\\/\?\.]/, '_')
 }
