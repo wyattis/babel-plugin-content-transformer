@@ -1,0 +1,16 @@
+{
+  "name": "babel-plugin-content-transformer-build-tester",
+  "private": true,
+  "public": false,
+  "devDependencies": {
+    "@babel/cli": "^7.13.16"
+  },
+  "peerDependencies": {
+    "toml": "*",
+    "yaml": "*"
+  },
+  "scripts": {
+    "build": "babel index.js -d temp",
+    "watch": "babel index.js -d temp --watch"
+  }
+}

@@ -18,6 +18,7 @@ export type Options =  {
 function addDependencies (api: API, options: Options, sources: string[]) {
   const dependencies = new Set()
   if (options.nocache) {
+    console.error('skipping cache')
     // @ts-ignore
     api.cache.never()
   }
@@ -25,8 +26,13 @@ function addDependencies (api: API, options: Options, sources: string[]) {
   for (const src of sources) {
     if (!options.nocache) {
       // @ts-ignore
-      api.cache.using(() => statSync(src).mtimeMs)
+      api.cache.using(() => {
+        const key = statSync(src).mtimeMs
+        console.error('cache key', src, key)
+        return key
+      })
     }
+    console.error('adding dependency', src)
     // @ts-ignore
     api.addExternalDependency(src)
     if (!isDirectory(src)) {
