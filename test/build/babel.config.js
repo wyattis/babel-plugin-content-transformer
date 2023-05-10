@@ -11,6 +11,7 @@ module.exports =  {
       source: ['./temp/posts'],
       filter: { test: p => p.endsWith('.md') },
       format: 'string',
+      nocache: true,
     }]
   ]
 }

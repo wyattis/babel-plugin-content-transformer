@@ -15,8 +15,38 @@ export type Options =  {
   filter?: { test: (path: string) => boolean }
 } & TransfomerDefinition
 
+function trackDependency (api: API, options: Options, src: string, isDirectory: boolean) {
+  if (options.nocache) {
+    console.error('adding uncached dependency', src)
+    // @ts-ignore
+    api.addExternalDependency(src)
+    return
+  }
+  if (isDirectory) {
+    // @ts-ignore
+    api.cache.using(() => {
+      const key = statSync(src).mtimeMs
+      console.error('cache dir key', src, key)
+      return key
+    })
+    console.error('adding dir dependency', src)
+    // @ts-ignore
+    api.addExternalDependency(src)
+  } else {
+    // @ts-ignore
+    api.cache.using(() => {
+      const key = statSync(src).mtimeMs
+      console.error('cache file key', src, key)
+      return key
+    })
+    console.error('adding file dependency', src)
+    // @ts-ignore
+    api.addExternalDependency(src)
+  }
+}
+
 function addDependencies (api: API, options: Options, sources: string[]) {
-  const dependencies = new Set()
+  const fileDependencies = new Set()
   if (options.nocache) {
     console.error('skipping cache')
     // @ts-ignore
@@ -24,32 +54,23 @@ function addDependencies (api: API, options: Options, sources: string[]) {
   }
 
   for (const src of sources) {
-    if (!options.nocache) {
-      // @ts-ignore
-      api.cache.using(() => {
-        const key = statSync(src).mtimeMs
-        console.error('cache key', src, key)
-        return key
-      })
-    }
-    console.error('adding dependency', src)
-    // @ts-ignore
-    api.addExternalDependency(src)
-    if (!isDirectory(src)) {
-      dependencies.add(src)
-      break
-    }
-    let files = readdirSync(src, { recursive: options.recursive, encoding: 'utf-8' })
-    if (options.filter) {
-      files = files.filter(file => options.filter!.test(file))
-    }
-    for (let file of files) {
-      file = path.join(src, file)
-      dependencies.add(file)
+    const isDir = isDirectory(src)
+    trackDependency(api, options, src, isDir)
+    if (isDir) {
+      let files = readdirSync(src, { recursive: options.recursive, encoding: 'utf-8' })
+      if (options.filter) {
+        files = files.filter(file => options.filter!.test(file))
+      }
+      for (let file of files) {
+        file = path.join(src, file)
+        fileDependencies.add(file)
+        trackDependency(api, options, file, false)
+      }
+    } else {
+      fileDependencies.add(src)
     }
   }
-
-  return dependencies
+  return fileDependencies
 }
 
 function validateOptions (opts: Options) {
@@ -92,6 +113,7 @@ export const Plugin = function (api: API, options: Options): PluginObj {
           const dirPath = path.dirname(state.file.opts.filename)
           const fullPath = resolvePath(p.node.source.value, dirPath)
           if (isDirectory(fullPath) && sources.includes(fullPath)) {
+            // trackDependency(api, options, fullPath, true)
             loadDirectory(api.types, p, state, options)
           } else if (hasTransform && files.has(fullPath)) {
             // Handle transformation of a single file

@@ -10,7 +10,7 @@
     "yaml": "*"
   },
   "scripts": {
-    "build": "babel index.js -d temp",
-    "watch": "babel index.js -d temp --watch"
+    "build": "babel index.js -d temp/dist",
+    "watch": "babel index.js -d temp/dist --watch"
   }
 }
